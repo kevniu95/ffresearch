@@ -18,9 +18,22 @@ Rough thesis:
 4. In a world where all teams have same total E(PF above leaguge average), league winners are those with higher variance players
    1. VERY IMPORTANT ASSUMPTION: team managers can discriminate and determine which players will score more in a given week
 
-Things to prove in research:
-1. E(PF) is heteroskedastic
+Things to investigate in research:
+1. Is E(PF) heteroskedastic?
    1. Namely - variance it is determined by position and average draft position heading into season
    2. If this assumption is not met, there are no "higher variance players," and above study is useless
-2. There exists some relationship between how much a fantasy team can score and the E(PF) and MSE(PF) of the players on that team
-3. This relationship can be modeled by a linear equation.
+2. Is there predictable relationship between max that a fantasy team can score and the E(PF) and MSE(PF) of the players on that team
+   1. Find it - can this relationship be can modeled by a linear equation?
+3. Is there a predictable relationship between actual PF and max PF?
+   1. Show actual PF based on real-life fantasy managers' decisions is near max PF
+   2. Or above random decisions
+   3. Or above some other reasonable baseline
+
+1 above is done.
+To do 2:
+- Do following steps "enough" times to have sufficient data
+  - Simulate or get realistic set of drafted teams for a given season
+  - Calculate average weekly max score for all teams over a season
+- Regress avg(PF_max) ~ Roster composition
+- Determine some expectedPF / maxPF ratio - this is expected PF for a chosen fantasy football team
+
