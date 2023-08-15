@@ -2,6 +2,7 @@ import pickle
 import pathlib
 import os
 import pandas as pd
+import numpy as np
 from typing import Dict
 from enum import Enum
 
@@ -89,8 +90,7 @@ def merge_adp_dataset(pts_df_reg, adp_df):
                         how = 'outer',
                         indicator= 'foundAdp')
     # print(test.groupby(['Year']))
-    a = test[['Year','foundAdp']].value_counts().reset_index().sort_values(['Year','foundAdp'])
-    print(a)
+    test['drafted'] = np.where(test['foundAdp'] == 'left_only', 0, 1)
     # print(test.shape)
     
     # 2. Create previous year, fill out player name, position, team
@@ -105,17 +105,14 @@ def merge_adp_dataset(pts_df_reg, adp_df):
     # 3. Create positional dummies
     test[['QB','RB','TE','WR']] = pd.get_dummies(test['FantPos'])
     return test
-    
-def main():
-    scoring_type = 'PPR' # or HPPR or NPPR
-    scoring = 'Pts_' + scoring_type
 
+
+def makeRegDataset():
     path = pathlib.Path(__file__).parent.resolve()
     os.chdir(path)
-
     adp_pickle = '../data/created/adp.p'
     points_pickle = '../data/created/points.p'
-    
+
     with open(adp_pickle, 'rb') as handle:
         adp_df = pickle.load(handle)
     with open(points_pickle, 'rb') as handle:
@@ -123,14 +120,11 @@ def main():
 
     pc = PointsConverter(ScoringType.PPR)
     points_df = pc.prep_pts_df(points_df_dict)
-
-    final_df = merge_adp_dataset(points_df, adp_df)
-    df1 = final_df[final_df['foundAdp'] == 'left_only']
-    df2 = df1[(df1['Pts_PPR'] >= 20) & (df1['Year'] > 2015)]
-    print(df2)
-    # print(df2.sort_values(['Pts_PPR'], ascending = False).head(40))
-    # print(final_df[final_df['foundAdp'] == 'left_only'].tail(100))
-    # print(final_df[final_df['foundAdp'] == 'right_only'].tail(100))
-
+    
+    return  merge_adp_dataset(points_df, adp_df)
+    
+def main():
+    makeRegDataset()
+        
 if __name__ == '__main__':
     main()
